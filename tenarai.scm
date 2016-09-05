@@ -120,3 +120,26 @@
                        (cons new (multisubst new old (cdr lat))))
                       (else (cons (car lat)
                                   (multisubst new old (cdr lat)))))))))
+
+;; p61
+(define add1
+          (lambda (n)
+            (+ n 1)))
+
+(define sub1
+          (lambda (n)
+            (- n 1)))
+
+;;p62
+(define o+
+  (lambda (n m)
+    (cond
+     ((zero? m) n)
+     (else (add1 (o+ n (sub1 m)))))))
+
+;; p63
+(define o-
+  (lambda (n m)
+    (cond
+     ((zero? m) n)
+     (else (sub1 (o- n (sub1 m)))))))
