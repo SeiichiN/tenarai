@@ -143,3 +143,40 @@
     (cond
      ((zero? m) n)
      (else (sub1 (o- n (sub1 m)))))))
+
+;; p66
+(define addtup
+          (lambda (tup)
+            (cond
+              ((null? tup) 0)
+              (else (o+ (car tup)(addtup (cdr tup)))))))
+;; 67
+(define x
+          (lambda (n m)
+            (cond
+              ((zero? m) 0)
+              (else (o+ n (x n (sub1 m)))))))
+
+
+;; p70
+(define tup+
+          (lambda (tup1 tup2)
+            (cond
+              ((and (null? tup1)(null? tup2))
+               (quote ()))
+              (else
+               (cons (o+ (car tup1)(car tup2))
+                     (tup+
+                      (cdr tup1)(cdr tup2)))))))
+
+;; p73
+(define tup+
+          (lambda (tup1 tup2)
+            (cond
+              ((null? tup1) tup2)
+              ((null? tup2) tup1)
+              (else
+               (cons (o+ (car tup1)(car tup2))
+                     (tup+
+                      (cdr tup1)(cdr tup2)))))))
+
