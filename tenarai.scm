@@ -158,17 +158,6 @@
               (else (o+ n (x n (sub1 m)))))))
 
 
-;; p70
-(define tup+
-          (lambda (tup1 tup2)
-            (cond
-              ((and (null? tup1)(null? tup2))
-               (quote ()))
-              (else
-               (cons (o+ (car tup1)(car tup2))
-                     (tup+
-                      (cdr tup1)(cdr tup2)))))))
-
 ;; p73
 (define tup+
           (lambda (tup1 tup2)
@@ -179,4 +168,21 @@
                (cons (o+ (car tup1)(car tup2))
                      (tup+
                       (cdr tup1)(cdr tup2)))))))
+
+
+;; p74
+(define >
+  (lambda (n m)
+    (cond
+     ((zero? n) #f)
+     ((zero? m) #t)
+     (else (> (sub1 n)(sub1 m))))))
+
+;; p75
+(define <
+  (lambda (n m)
+    (cond
+     ((zero? m) #f)
+     ((zero? n) #t)
+     (else (< (sub1 n)(sub1 m))))))
 
