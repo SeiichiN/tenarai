@@ -186,3 +186,40 @@
      ((zero? n) #t)
      (else (< (sub1 n)(sub1 m))))))
 
+;; p76
+(define =
+          (lambda (n m)
+            (cond
+              ((> n m) #f)
+              ((< n m) #f)
+              (else #t))))
+
+;; p76
+(define o^
+          (lambda (n m)
+            (cond
+              ((zero? m) 1)
+              (else (x n (o^ n (sub1 m)))))))
+
+;; p77
+(define waru
+          (lambda (n m)
+            (cond
+              ((< n m) 0)
+              (else (add1 (waru (o- n m) m))))))
+
+;; p78
+(define length
+  (lambda (lat)
+    (cond
+     ((null? lat) 0)
+     (else (add1 (length (cdr lat)))))))
+
+;; p78
+(define pick
+          (lambda (n lat)
+            (cond
+              ((null? lat) 0)
+              ((zero? (sub1 n)) (car lat))
+              (else (pick (sub1 n)(cdr lat))))))
+
