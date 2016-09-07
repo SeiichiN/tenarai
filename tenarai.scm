@@ -219,7 +219,8 @@
 (define pick
           (lambda (n lat)
             (cond
-              ((null? lat) 0)
-              ((zero? (sub1 n)) (car lat))
-              (else (pick (sub1 n)(cdr lat))))))
+              ((null? lat) (quote ()))
+              ((zero? n) (quote lat))
+              (else ((zero? (sub1 n)) (quote ())) 
+                    (cons (car lat)(pick (sub1 n)(cdr lat)))))))
 
