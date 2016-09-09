@@ -1,5 +1,6 @@
 ;; Scheme手習い
 ;; p16
+;; atomであるかどうかを判定
 (define lat?
           (lambda (l)
             (cond
@@ -256,9 +257,71 @@
     (cond
      ((and (number? a1)(number? a2))
       (= a1 a2))
+     ((or (number? a1)(number? a2)) #f)
      (else
-      (cond
-       (eq? a1 a2)
-       (else
-        (#f)))))))
+      (eq? a1 a2)))))
 
+;; p80
+(define occur
+          (lambda (a lat)
+            (cond
+              ((null? lat) 0)
+              (else
+               (cond
+                 ((eqan? a (car lat))
+                  (add1 (occur a (cdr lat))))
+                 (else
+                  (occur a (cdr lat))))))))
+
+;; p81
+(define one?
+  (lambda (n)
+    (= n 1)))
+
+
+;; p81
+(define rempick
+          (lambda (n lat)
+            (cond
+              ((one? n) (cdr lat))
+              (else
+               (cons (car lat)(rempick (sub1 n)(cdr lat)))))))
+
+;; p83
+;; リストｌからａをとりのぞいたリストをつくる
+(define rember*
+  (lambda (a l)
+    (cond
+     ((null? l)(quote ()))
+     ((atom? (car l))
+      (cond
+       ((eq? (car l) a)(rember* a (cdr l)))
+       (else
+        (cons (car l)(rember* a (cdr l))))))
+     (else
+      (cons (rember* a (car l))(rember* a (cdr l)))))))
+
+(define atom?
+  (lambda (x)
+    (and (not (pair? x))(not (null? x)))))
+
+;; p84
+;; oldの右にアトムnewを入れる関数
+(define insertR*
+  (lambda (new old l)
+    (cond
+     ((null? l)(quote ()))
+     ((atom? (car l))
+      (cond
+       ((eq? old (car l))
+        (cons old
+              (cons new
+                    (insertR* new old (cdr l)))))
+       (else
+        (cons (car l)
+              (insertR* new old (cdr l))))))
+     (else
+      (cons (insertR* new old (car l))
+            (insertR* new old (cdr l)))))))
+
+      
