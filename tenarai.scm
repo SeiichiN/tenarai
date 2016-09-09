@@ -215,12 +215,50 @@
      ((null? lat) 0)
      (else (add1 (length (cdr lat)))))))
 
-;; p78
+;;
 (define pick
+  (lambda (n lat)
+    (cond
+     ((zero? (sub1 n))(car lat))
+     (else
+      (pick (sub1 n)(cdr lat))))))
+
+;; p78
+(define rempick
           (lambda (n lat)
             (cond
-              ((null? lat) (quote ()))
-              ((zero? n) (quote lat))
-              (else ((zero? (sub1 n)) (quote ())) 
-                    (cons (car lat)(pick (sub1 n)(cdr lat)))))))
+              ((zero? (sub1 n)) (cdr lat))
+              (else
+               (cons (car lat)(rempick (sub1 n)(cdr lat)))))))
+
+;; p79
+(define no-nums
+  (lambda (lat)
+    (cond
+     ((null? lat)(quote ()))
+     ((number? (car lat))(no-nums (cdr lat)))
+     (else
+      (cons (car lat)(no-nums (cdr lat)))))))
+
+;; p80
+(define all-nums
+  (lambda (lat)
+    (cond
+     ((null? lat)(quote ()))
+     ((number? (car lat))
+       (cons (car lat)(all-nums (cdr lat))))
+     (else
+      (all-nums (cdr lat))))))
+
+;; p80
+(define eqan?
+  (lambda (a1 a2)
+    (cond
+     ((and (number? a1)(number? a2))
+      (= a1 a2))
+     (else
+      (cond
+       (eq? a1 a2)
+       (else
+        (#f)))))))
 
