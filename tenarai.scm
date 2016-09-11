@@ -356,3 +356,34 @@
       (cons (subst* new old (car l))
             (subst* new old (cdr l)))))))
 
+;; p89
+;; リストlの中のoldの左にnewを入れる。
+(define insertL*
+  (lambda (new old l)
+    (cond
+     ((null? l)(quote ()))
+     ((atom? (car l))
+      (cond
+       ((eq? (car l) old)
+        (cons new (cons (car l)(insertL* new old (cdr l)))))
+       (else
+        (cons (car l)(insertL* new old (cdr l))))))
+     (else
+      (cons (insertL* new old (car l))
+            (insertL* new old (cdr l)))))))
+
+;; p89
+;; リストの中にaが含まれていたら#tを返す
+(define member*
+  (lambda (a l)
+    (cond
+     ((null? l) nil)
+     ((atom? (car l))
+      (or
+       (eq? a (car l))
+        (member* a (cdr l))))
+     (else
+      (or (member* a (car l))
+          (member* a (cdr l)))))))
+
+
