@@ -380,10 +380,20 @@
      ((null? l) nil)
      ((atom? (car l))
       (or
-       (eq? a (car l))
-        (member* a (cdr l))))
+       (eq? (car l) a) 
+       (member* a (cdr l))))
      (else
       (or (member* a (car l))
           (member* a (cdr l)))))))
+
+(define nil '())
+
+;; p90
+;; からでないリストの一番左にあるアトムを見つける。
+(define leftmost
+          (lambda (l)
+            (cond
+              ((atom? (car l))(car l))
+              (else (leftmost (car l))))))
 
 
