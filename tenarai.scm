@@ -12,19 +12,19 @@
 (define member?
           (lambda (a lat)
             (cond
-              ((null? lat) nil)
-              (else (or (eq? (car lat) a)
+              ((null? lat) #f)
+              (else (or (equal? (car lat) a)
                         (member? a (cdr lat)))))))
 
 ;; p35
-(define rember
-  (lambda (a lat)
-    (cond
-     ((null? lat)(quote ()))
-     (else (cond
-            ((eq? (car lat) a)(cdr lat))
-            (else (cons (car lat)
-                        (rember a (cdr lat)))))))))
+;(define rember
+;  (lambda (a lat)
+;    (cond
+;     ((null? lat)(quote ()))
+;     (else (cond
+;            ((eq? (car lat) a)(cdr lat))
+;            (else (cons (car lat)
+;                        (rember a (cdr lat)))))))))
 
 ;; p46
 (define firsts
@@ -85,7 +85,7 @@
     (cond
      ((null? lat)(quote ()))
      (else (cond
-            ((eq? (car lat) a)(multirember a (cdr lat)))
+            ((equal? (car lat) a)(multirember a (cdr lat)))
             (else (cons (car lat) (multirember a (cdr lat)))))))))
 
 ;; p57
@@ -398,16 +398,177 @@
 
 ;; p94
 ;; リストl1とl2がまったく等しければ#tを返す
+;(define eqlist?
+;  (lambda (l1 l2)
+;    (cond
+;     ((and (null? l1)(null? l2)) #t)
+;     ((or (null? l1)(null? l2)) #f)
+;     ((and (atom? (car l1))(atom? (car l2)))
+;      (and (eqan? (car l1)(car l2))
+;           (eqlist? (cdr l1)(cdr l2))))
+;     ((or (atom? (car l1))(atom? (car l2))) #f)
+;     (else
+;      (and (eqlist? (car l1)(car l2))
+;           (eqlist? (cdr l1)(cdr l2)))))))
+
+;; p96
+;; s1とs2が同じなら#tを返す
+(define equal?
+  (lambda (s1 s2)
+    (cond
+     ((and (atom? s1)(atom? s2))
+      (eqan? s1 s2))
+     ((or(atom? s1)(atom? s2)) #f)
+     (else (eqlist? s1 s2)))))
+
+;; p94
+;; リストl1とl2がまったく等しければ#tを返す
 (define eqlist?
   (lambda (l1 l2)
     (cond
      ((and (null? l1)(null? l2)) #t)
      ((or (null? l1)(null? l2)) #f)
-     ((and (atom? (car l1))(atom? (car l2)))
-      (and (eqan? (car l1)(car l2))
-           (eqlist? (cdr l1)(cdr l2))))
-     ((or (atom? (car l1))(atom? (car l2))) #f)
      (else
-      (and (eqlist? (car l1)(car l2))
+      (and (equal? (car l1)(car l2))
            (eqlist? (cdr l1)(cdr l2)))))))
 
+;; p97
+;; リストlの中のS式sを取り除く
+;; p35のremberをアトム対象からS式対象に変更
+(define rember
+  (lambda (s l)
+    (cond
+     ((null? l)(quote ()))
+     ((equal? (car l) s)(cdr l))
+     (else
+      (cons (car l)
+            (rember s (cdr l)))))))
+
+;; p103
+;; aexpが算術式であることがわかっているとき
+;; aexpが数値であることを確認する
+(define numbered?
+  (lambda (aexp)
+    (cond
+     ((atom? aexp)(numbered? aexp))
+     (else
+      (and (numbered? (car aexp))
+           (numbered? (car (cdr (cdr aexp)))))))))
+
+;; p105
+;; プラス、かける、累乗についての算術式を表す
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((eq? (car (cdr nexp))(quote o+))
+      (o+ (value (car nexp))(value (car (cdr (cdr nexp))))))
+     ((eq? (car (cdr nexp))(quote x))
+      (x (value (car nexp))(value (car (cdr (cdr nexp))))))
+     ((eq? (car (cdr nexp))(quote o^))
+      (o^ (value (car nexp))(value (car (cdr (cdr nexp))))))
+     (else
+      (display "Noe Susiki.\n")))))
+
+;; p107 - p108
+;; 算術式
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car (cdr aexp))))
+
+(define 2st-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
+(define operator
+  (lambda (aexp)
+    (car aexp)))
+
+
+;; p109
+;; ゼロかどうか調べる
+(define sero?
+  (lambda (n)
+    (null? n)))
+
+;; p113
+;; 集合かどうかを調べる
+(define set?
+  (lambda (lat)
+    (cond
+     ((null? lat) #t)
+     ((member? (car lat)(cdr lat)) #f)
+     (else (set? (cdr lat))))))
+
+
+;; p114
+;; 集合をつくる
+(define makeset
+  (lambda (lat)
+    (cond
+     ((null? lat)(quote ()))
+     ((member? (car lat)(cdr lat))
+      (makeset (cdr lat)))
+     (else
+      (cons (car lat)(makeset (cdr lat)))))))
+
+;; p114
+;; multiremberを使ってmakesetを書く
+(define mkset
+  (lambda (lat)
+    (cond
+     ((null? lat)(quote ()))
+     (else
+      (cons (car lat)(mkset (multirember (car lat)(cdr lat))))))))
+
+;; p115
+;; 引数1の各アトムが引数２に含まれているか。
+(define subset?
+          (lambda (set1 set2)
+            (cond
+              ((null? set1) #t)
+              (else
+               (and
+                (member? (car set1) set2)
+                (subset? (cdr set1) set2))))))
+
+;; p116
+;; ２つの集合は等しいか？
+(define eqset?
+          (lambda (set1 set2)
+            (and
+             (subset? set1 set2)(subset? set2 set1))))
+
+;; p117
+;; set1の中の要素がひとつでもset2の中に含まれていれば#t
+(define intersect?
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #f)
+     (else
+      (or(member? (car set1) set2)
+         (interset? (cdr set1) set2))))))
+
+;; p118
+;; set1の中の要素とset2の要素との共通項を抜き出す
+(define intersect
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) nil)
+     ((member? (car set1) set2)
+      (cons (car set1)(intersect (cdr set1) set2)))
+     (else
+      (intersect (cdr set1) set2)))))
+
+;; p118
+;; set1の中の要素とset2の要素との和集合をつくる
+(define union
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) set2)
+     ((member? (car set1) set2)
+      (union (cdr set1) set2))
+     (else
+      (cons (car set1)(union (cdr set1) set2))))))
+
+  
