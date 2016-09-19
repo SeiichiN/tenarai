@@ -571,4 +571,94 @@
      (else
       (cons (car set1)(union (cdr set1) set2))))))
 
-  
+;; p118  
+(define xxx
+  (lambda (set1 set2)
+    (cond
+     ((null? set1)(quote ()))
+     ((member? (car set1) set2)
+      (xxx (cdr set1) set2))
+     (else
+      (cons (car set1)(xxx (cdr set1) set2))))))
+
+;; p119
+;; 各リストの中で、共通なアトムを抜き出す
+(define intersectall
+  (lambda (l-set)
+    (cond
+     ((null? (cdr l-set))(car l-set))
+     (else
+      (intersect (car l-set)(intersectall (cdr l-set)))))))
+
+;; p119
+;; ペアであるかどうか
+(define a-pair?
+  (lambda (x)
+    (cond
+     ((null? x) #f)
+     ((atom? x) #f)
+     ((null? (cdr x)) #f)
+     ((null? (cdr (cdr x))) #t)
+     (else #f))))
+
+;; p120
+;; first second third build
+(define first
+  (lambda (p)
+    (car p)))
+
+(define second
+  (lambda (p)
+    (car (cdr p))))
+
+;; ペアをつくる
+(define build
+  (lambda (a1 a2)
+    (cons a1 (cons a2 (quote ())))))
+
+(define third
+  (lambda (l)
+    (car (cdr (cdr l)))))
+
+;; p122
+(define fun?
+  (lambda (rel)
+    (set? (first rel))))
+
+;; p122
+;; 各リストを逆順にする
+(define revrel
+  (lambda (rel)
+    (cond
+     ((null? rel)(quote ()))
+     (else
+      (cons (revpair (car rel))
+            (revrel (cdr rel)))))))
+
+;; p123
+;; ２つの各要素を交換する
+(define revpair
+  (lambda (pair)
+    (build (second pair)(first pair))))
+
+;; p123
+;; 第２要素が集合かどうか
+(define fullfun?
+  (lambda (fun)
+    (set? (second fun))))
+
+;; p124
+(define one-to-one?
+  (lambda (fun)
+    (fun? (revrel fun))))
+
+;;p128
+;; test? に=かeq?かequal?を使う
+(define rember-f
+  (lambda (test? a l)
+    (cond
+     ((null? l)(quote ()))
+     ((test? (car l) a)(cdr l))
+     (else
+      (cons (car l)(rember-f test? a (cdr l)))))))
+
