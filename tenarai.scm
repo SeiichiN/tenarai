@@ -652,13 +652,67 @@
   (lambda (fun)
     (fun? (revrel fun))))
 
-;;p128
+;;p131
 ;; test? に=かeq?かequal?を使う
+;; 関数に名前をつけることができる
 (define rember-f
-  (lambda (test? a l)
-    (cond
-     ((null? l)(quote ()))
-     ((test? (car l) a)(cdr l))
-     (else
-      (cons (car l)(rember-f test? a (cdr l)))))))
+  (lambda (test?)
+    (lambda (a l)
+      (cond
+       ((null? l)(quote ()))
+       ((test? (car l) a)(cdr l))
+       (else
+        (cons (car l)((rember-f test?) a (cdr l))))))))
 
+;; p129
+;; カリー化
+(define eq?-c
+  (lambda (a)
+    (lambda (x)
+      (eq? x a))))
+
+           
+;; p132
+(define insertL-f
+  (lambda (test?)
+          (lambda (new old lat)
+            (cond
+              ((null? lat)(quote()))
+              (else (cond
+                      ((test? (car lat) old)
+                       (cons new (cons old (cdr lat))))
+                      (else (cons (car lat)
+                                  ((insertL-f test?) new old (cdr lat))))))))))
+
+(define insertR-f
+  (lambda (test?)
+    (lambda (new old lat)
+      (cond
+       ((null? lat)(quote ()))
+       (else
+        (cond
+         ((test? (car lat) old)
+          (cons old (cons new (cdr lat))))
+         (else (cons (car lat)
+                     ((insertR-f test?) new old (cdr lat))))))))))
+
+(define seqL
+  (lambda (new old lat)
+    (cons new (cons old lat))))
+
+(define seqR
+  (lambda (new old lat)
+    (cons old (cons new lat))))
+
+
+(define insert-g
+  (lambda (seq)
+    (lambda (new old lat)
+      (cond
+       ((null? lat)(quote ()))
+       ((eq? (car lat) old)
+        (seq new old (cdr lat)))
+       (else
+        (cons (car lat)((inset-g seq) new old (cdr lat))))))))
+
+        
