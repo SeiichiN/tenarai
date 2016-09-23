@@ -89,6 +89,7 @@
             ((equal? (car lat) a)(multirember a (cdr lat)))
             (else (cons (car lat) (multirember a (cdr lat)))))))))
 
+
 ;; p57
 (define multiinsertR
   (lambda (new old lat)
@@ -794,3 +795,16 @@
      (else o^))))
 
     
+
+;; p137
+(define multirember-f
+  (lambda (test?)
+    (lambda (a lat)
+      (cond
+       ((null? lat)(quote ()))
+       ((test? (car lat) a)
+        ((multirember-f test?) a (cdr lat)))
+       (else
+        (cons (car lat)
+              ((mutirember-f test?) a (cdr lat))))))))
+
