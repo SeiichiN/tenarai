@@ -35,29 +35,30 @@
                  (firsts (cdr l)))))))
 
 ;; p52
-(define insertR
-  (lambda (new old lat)
-    (cond
-     ((null? lat)(quote ()))
-     (else
-      (cond
-       ((eq? (car lat) old)
-        (cons old (cons new (cdr lat))))
-       (else (cons (car lat)
-                   (insertR new old (cdr lat)))))))))
+;(define insertR
+;  (lambda (new old lat)
+;    (cond
+;     ((null? lat)(quote ()))
+;     (else
+;      (cond
+;       ((eq? (car lat) old)
+;        (cons old (cons new (cdr lat))))
+;       (else (cons (car lat)
+;                   (insertR new old (cdr lat)))))))))
 
 ;; 52
-(define insertL
-          (lambda (new old lat)
-            (cond
-              ((null? lat)(quote()))
-              (else (cond
-                      ((eq? (car lat) old)
-                       (cons new lat))
-                      (else (cons (car lat)
-                                  (insertL new old (cdr lat)))))))))
+;(define insertL
+;          (lambda (new old lat)
+;            (cond
+;              ((null? lat)(quote()))
+;              (else (cond
+;                      ((eq? (car lat) old)
+;                       (cons new lat))
+;                      (else (cons (car lat)
+;                                  (insertL new old (cdr lat)))))))))
 
 ;; 53
+;; リストlatの中のoldをnewで置き換える
 (define subst
           (lambda (new old lat)
             (cond
@@ -713,6 +714,83 @@
        ((eq? (car lat) old)
         (seq new old (cdr lat)))
        (else
-        (cons (car lat)((inset-g seq) new old (cdr lat))))))))
+        (cons (car lat)((insert-g seq) new old (cdr lat))))))))
+
+(define seqL
+  (lambda (new old lat)
+    (cons new (cons old lat))))
+
+(define seqR
+  (lambda (new old lat)
+    (cons old (cons new lat))))
 
         
+(define insertL
+  (insert-g seqL))
+
+(define insertR
+  (insert-g seqR))
+
+(define insertL
+  (insert-g
+   (lambda (new old lat)
+     (cons new (cons old lat)))))
+
+(define insertR
+  (insert-g
+   (lambda (new old lat)
+     (cons old (cons new lat)))))
+
+
+(define seqS
+  (lambda (new old lat)
+    (cons new lat)))
+
+(define subst
+  (insert-g seqS))
+
+;; p135
+;; リストlatの中のoldをnewで置き換える
+(define subst
+  (insert-g
+   (lambda (new old lat)
+     (cons new lat))))
+
+
+;; p135
+;;
+(define yyy
+  (lambda (a l)
+    ((insert-g seqrem) #f a l)))
+
+(define seqrem
+  (lambda (new old l)
+    l))
+
+;; p105
+;; プラス、かける、累乗についての算術式を表す
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((atom-to-function (operator nexp))
+      (value (1st-sub-exp nexp))
+      (value (2nd-sub-exp nexp))))))
+
+;     ((eq? (car (cdr nexp))(quote o+))
+;      (o+ (value (car nexp))(value (car (cdr (cdr nexp))))))
+;     ((eq? (car (cdr nexp))(quote x))
+;      (x (value (car nexp))(value (car (cdr (cdr nexp))))))
+;     ((eq? (car (cdr nexp))(quote o^))
+;      (o^ (value (car nexp))(value (car (cdr (cdr nexp))))))
+;     (else
+;      (display "Noe Susiki.\n")))))
+
+(define atom-to-function
+  (lambda (x)
+    (cond
+     ((eq? x (quote o+)) o+)
+     ((eq? x (quote x)) x)
+     (else o^))))
+
+    
