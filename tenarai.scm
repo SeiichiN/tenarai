@@ -797,14 +797,59 @@
     
 
 ;; p137
-(define multirember-f
+(define multidel-f
   (lambda (test?)
     (lambda (a lat)
       (cond
        ((null? lat)(quote ()))
-       ((test? (car lat) a)
-        ((multirember-f test?) a (cdr lat)))
+       ((test? a (car lat))
+        ((multidel-f test?) a (cdr lat)))
        (else
         (cons (car lat)
-              ((mutirember-f test?) a (cdr lat))))))))
+              ((multidel-f test?) a (cdr lat))))))))
 
+;; p138
+(define eq?-tuna
+  (eq?-c (quote tuna)))
+
+;; p139
+(define multidelT
+  (lambda (test? lat)
+    (cond
+     ((null? lat)(quote ()))
+     ((test? (car lat))
+      (multidelT test? (cdr lat)))
+     (else
+      (cons (car lat)
+            (multidelT test? (cdr lat)))))))
+
+                
+;; p139
+(define multidel&co
+  (lambda (a lat col)
+    (cond
+     ((null? lat)(col (quote ())(quote())))
+     ((eq? (car lat) a)
+      (multidel&co a (cdr lat)
+                  (lambda (newlat seen)
+                    (col newlat
+                         (cons (car lat) seen)))))
+     (else
+      (multidel&co a
+                   (cdr lat)
+                   (lambda (newlat seen)
+                     (col (cons (car lat) newlat) seen)))))))
+
+                    
+                               
+;; p140
+(define a-friend
+  (lambda (x y)
+    (null? y)))
+
+
+;; p141
+(define new-friend
+  (lambda (newlat seen)
+    (col newlat
+         (cons (car lat) seen))))
